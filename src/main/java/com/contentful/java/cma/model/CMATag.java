@@ -1,23 +1,47 @@
+/*
+ * Copyright (C) 2019 Contentful GmbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.contentful.java.cma.model;
 
 /**
- * CMATag.
- * <p>
- * This class will be used to represent a tag on the CMA SDK.
+ * Represents a resource of type environment.
  */
 public class CMATag extends CMAResource {
-
+  // Name
   String name;
 
   /**
-   * Create a new tag, specifying the type in the system property.
+   * Create a tag using the default types for the system property.
    */
   public CMATag() {
     super(CMAType.Tag);
   }
 
+  @Override
+  public CMAVisibility getVisibility() {
+    return super.getVisibility();
+  }
+
+  @Override
+  public <T extends CMAResource> T setVisibility(CMAVisibility visibility) {
+    return super.setVisibility(visibility);
+  }
+
   /**
-   * Set the system field.
+   * Sets the system field.
    *
    * @param system sets the system property.
    */
@@ -28,63 +52,40 @@ public class CMATag extends CMAResource {
   }
 
   /**
-   * Convenience: Update the id of tag without going through {@link #getSystem()}.
-   *
-   * @param id to be set.
-   * @return the calling instance for chaining.
-   */
-  @SuppressWarnings("unchecked")
-  @Override public CMATag setId(String id) {
-    return super.setId(id);
-  }
-
-  /**
-   * Convenience: Update the version of tag without going through {@link #getSystem()}.
-   *
-   * @param version to be set.
-   * @return the calling instance for chaining.
-   */
-  @SuppressWarnings("unchecked")
-  @Override public CMATag setVersion(Integer version) {
-    return super.setVersion(version);
-  }
-
-  /**
-   * Convenience: Update the space id of tag without going through {@link #getSystem()}.
-   *
-   * @param spaceId to be set.
-   * @return the calling instance for chaining.
-   */
-  @SuppressWarnings("unchecked")
-  @Override public CMATag setSpaceId(String spaceId) {
-    return super.setSpaceId(spaceId);
-  }
-
-  /**
-   * Convenience: get the visibility without going through {@link #getSystem()}.
-   *
-   * @return the {@code sys.visibility} value, null if it does not exist.
-   */
-  public CMAVisibility getVisibility() {
-    return getSystem().getVisibility();
-  }
-
-  /**
-   * @return the tag's name.
+   * @return the name of this tag.
    */
   public String getName() {
     return name;
   }
 
   /**
-   * Set the name of the tag.
+   * Sets the name for this tag.
    *
-   * @param name the tag's name to be set.
-   * @return the calling instance for chaining.
+   * @param name the name of the tag to be set
+   * @return this {@code CMATag} instance.
    */
   public CMATag setName(String name) {
     this.name = name;
     return this;
+  }
+
+  /**
+   * Sets the id of this tag.
+   *
+   * @param id to be set.
+   * @return this instance for chaining.
+   */
+  @SuppressWarnings("unchecked") @Override public CMATag setId(String id) {
+    return super.setId(id);
+  }
+
+  /**
+   * Override retrieval of the tag id here, since the id of this tag is it's id.
+   *
+   * @return the ID of the tag
+   */
+  @Override public String getId() {
+    return getId();
   }
 
   /**
@@ -96,4 +97,3 @@ public class CMATag extends CMAResource {
         + "}";
   }
 }
-
