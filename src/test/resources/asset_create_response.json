@@ -1,22 +1,4 @@
 {
-  "metadata": {
-    "tags": [
-      {
-        "sys": {
-          "type": "Link",
-          "linkType": "Tag",
-          "id": "anotherone"
-        }
-      },
-      {
-        "sys": {
-          "type": "Link",
-          "linkType": "Tag",
-          "id": "wat"
-        }
-      }
-    ]
-  },
   "fields": {
     "title": {
       "en-US": "title"

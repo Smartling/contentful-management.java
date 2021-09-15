@@ -210,9 +210,9 @@ public class ModuleAssets extends AbsModule<ServiceAssets> {
       Map<String, String> query) {
     assertNotNull(spaceId, "spaceId");
     assertNotNull(environmentId, "environmentId");
-    Map<String, String> enhancedQuery =
-      DefaultQueryParameter.putIfNotSet(query, DefaultQueryParameter.FETCH);
-    return service.fetchAll(spaceId, environmentId, enhancedQuery).blockingFirst();
+    DefaultQueryParameter.putIfNotSet(query, DefaultQueryParameter.FETCH);
+
+    return service.fetchAll(spaceId, environmentId, query).blockingFirst();
   }
 
   /**

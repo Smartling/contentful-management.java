@@ -166,9 +166,8 @@ public class ModuleSpaces extends AbsModule<ServiceSpaces> {
    * @return {@link CMAArray} result instance
    */
   public CMAArray<CMASpace> fetchAll(Map<String, String> query) {
-    Map<String, String> enhancedQuery =
-      DefaultQueryParameter.putIfNotSet(query, DefaultQueryParameter.FETCH);
-    return service.fetchAll(enhancedQuery).blockingFirst();
+    DefaultQueryParameter.putIfNotSet(query, DefaultQueryParameter.FETCH);
+    return service.fetchAll(query).blockingFirst();
   }
 
   /**
@@ -348,9 +347,8 @@ public class ModuleSpaces extends AbsModule<ServiceSpaces> {
                                                     CMACallback<CMAArray<CMASpace>> callback) {
       return defer(new DefFunc<CMAArray<CMASpace>>() {
         @Override CMAArray<CMASpace> method() {
-          Map<String, String> enhancedQuery =
-            DefaultQueryParameter.putIfNotSet(query, DefaultQueryParameter.FETCH);
-          return ModuleSpaces.this.fetchAll(enhancedQuery);
+          DefaultQueryParameter.putIfNotSet(query, DefaultQueryParameter.FETCH);
+          return ModuleSpaces.this.fetchAll(query);
         }
       }, callback);
     }

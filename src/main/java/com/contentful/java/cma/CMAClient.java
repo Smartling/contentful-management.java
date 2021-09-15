@@ -157,8 +157,8 @@ public class CMAClient {
     this.moduleSpaceMemberships = new ModuleSpaceMemberships(retrofit, callbackExecutor, spaceId,
         environmentId, configured);
     this.moduleSpaces = new ModuleSpaces(retrofit, callbackExecutor, configured);
-    this.moduleTags = new ModuleTags(retrofit, callbackExecutor,
-            spaceId, environmentId, configured);
+    this.moduleTags = new ModuleTags(retrofit, callbackExecutor, spaceId,
+        environmentId, configured);
     this.moduleUiExtensions = new ModuleUiExtensions(retrofit, callbackExecutor, spaceId,
         environmentId, configured);
     this.moduleUploads = new ModuleUploads(uploadRetrofit, callbackExecutor, spaceId,
@@ -339,7 +339,7 @@ public class CMAClient {
   }
 
   /**
-   * @return the Tags module.
+   * @return the Tags module
    */
   public ModuleTags tags() {
     return moduleTags;

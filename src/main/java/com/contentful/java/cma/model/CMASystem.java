@@ -27,16 +27,6 @@ public class CMASystem {
   String updatedAt;
   CMALink updatedBy;
   Integer version;
-  CMAVisibility visibility;
-
-  public CMAVisibility getVisibility() {
-    return visibility;
-  }
-
-  public void setVisibility(CMAVisibility visibility) {
-    this.visibility = visibility;
-  }
-
   Integer archivedVersion;
 
   @SerializedName("status")
