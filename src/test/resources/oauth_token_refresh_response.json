@@ -1,0 +1,8 @@
+{
+  "access_token": "new-access-token",
+  "refresh_token": "new-refresh-token",
+  "token_type": "Bearer",
+  "expires_in": 2591999,
+  "scope": "content_management_manage",
+  "created_at": 1737558900
+}
