@@ -91,6 +91,24 @@ class WebhookTests {
     }
 
     @test
+    fun testCreateWithEnvironmentFilter() {
+        val requestBody = TestUtils.fileToString("webhook_create_with_filter_request.json")
+        val responseBody = TestUtils.fileToString("webhook_create.json")
+        server!!.enqueue(MockResponse().setResponseCode(200).setBody(responseBody))
+
+        val webhook = CMAWebhook()
+                .setName("cma-created")
+                .setUrl("https://contentful.com")
+                .addTopic(CMAWebhookTopic.EntryAll)
+                .addFilter(CMAWebhookFilter.equals("sys.environment.sys.id", "master"))
+
+        assertNotNull(client!!.webhooks().create("configuredSpaceId", webhook))
+
+        val recordedRequest = server!!.takeRequest()
+        assertEqualJsons(requestBody, recordedRequest.body.readUtf8(), false)
+    }
+
+    @test
     fun testCreateWithConfiguredSpaceAndEnvironment() {
         val responseBody = TestUtils.fileToString("webhook_create.json")
         server!!.enqueue(MockResponse().setResponseCode(200).setBody(responseBody))
