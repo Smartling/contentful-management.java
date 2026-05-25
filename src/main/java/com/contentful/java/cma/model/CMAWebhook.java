@@ -33,6 +33,7 @@ public class CMAWebhook extends CMAResource {
 
   List<CMAWebhookTopic> topics;
   List<CMAWebhookHeader> headers;
+  List<CMAWebhookFilter> filters;
 
   private CMAWebhookTransformation transformation;
 
@@ -121,6 +122,27 @@ public class CMAWebhook extends CMAResource {
 
     this.headers.add(new CMAWebhookHeader(key, value));
     return this;
+  }
+
+  /**
+   * Adds a filter constraint that limits when this webhook fires.
+   *
+   * @param filter constraint constructed via {@link CMAWebhookFilter#equals(String, String)}
+   * @return this webhook for chaining.
+   */
+  public CMAWebhook addFilter(CMAWebhookFilter filter) {
+    if (this.filters == null) {
+      this.filters = new ArrayList<CMAWebhookFilter>();
+    }
+    this.filters.add(filter);
+    return this;
+  }
+
+  /**
+   * @return A copy of the filter constraints, or {@code null} if none.
+   */
+  public List<CMAWebhookFilter> getFilters() {
+    return filters == null ? null : new ArrayList<CMAWebhookFilter>(filters);
   }
 
   /**
@@ -232,6 +254,7 @@ public class CMAWebhook extends CMAResource {
         + "user = " + getUser() + ", "
         + (topics == null ? "" : "topics = " + getTopics() + ", ")
         + (headers == null ? "" : "headers = " + getHeaders() + " ")
+        + (filters == null ? "" : "filters = " + getFilters() + ", ")
         + (transformation == null ? "" : "transformation = " + getTransformation() + ", ")
         + "}";
   }

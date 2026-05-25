@@ -1,0 +1,8 @@
+{
+  "name": "cma-created",
+  "url": "https://contentful.com",
+  "topics": ["Entry.*"],
+  "filters": [
+    {"equals": [{"doc": "sys.environment.sys.id"}, "master"]}
+  ]
+}
