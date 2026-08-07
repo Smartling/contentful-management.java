@@ -310,6 +310,20 @@ class EntryTests {
     }
 
     @test
+    fun testFetchWithIdPreservesIntegerAndDecimalFieldValues() {
+        val responseBody = TestUtils.fileToString("entry_numeric_fields_response.json")
+        server!!.enqueue(MockResponse().setResponseCode(200).setBody(responseBody))
+
+        val result = assertTestCallback(client!!.entries().async().fetchOne(
+                "space", "master", "entry", TestCallback()) as TestCallback)!!
+
+        val fields = result.fields
+
+        assertEquals(30L, fields["intField"]!!["en-US"])
+        assertEquals(30.0, fields["decimalField"]!!["en-US"])
+    }
+
+    @test
     fun testFetchWithIdWithConfiguredSpaceAndEnvironment() {
         val responseBody = TestUtils.fileToString("entry_fetch_one_response.json")
         server!!.enqueue(MockResponse().setResponseCode(200).setBody(responseBody))
