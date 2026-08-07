@@ -3,7 +3,7 @@
 
   <groupId>com.contentful.java</groupId>
   <artifactId>cma-sdk</artifactId>
-  <version>3.4.3.15-SMT-SNAPSHOT</version>
+  <version>3.4.3.16-SMT-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>cma-sdk</name>
@@ -88,6 +88,12 @@
       <groupId>com.squareup.retrofit2</groupId>
       <artifactId>converter-gson</artifactId>
       <version>${retrofit.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.9.1</version>
     </dependency>
 
     <dependency>

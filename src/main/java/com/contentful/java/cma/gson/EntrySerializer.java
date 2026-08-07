@@ -10,6 +10,7 @@ import com.contentful.java.cma.model.rich.CMARichHyperLink;
 import com.contentful.java.cma.model.rich.CMARichNode;
 import com.contentful.java.cma.model.rich.RichTextFactory;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -18,6 +19,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.google.gson.ToNumberPolicy;
 
 import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
@@ -32,6 +34,14 @@ import static com.contentful.java.cma.model.CMAType.Link;
 public class EntrySerializer implements JsonSerializer<CMAEntry>, JsonDeserializer<CMAEntry> {
 
   private final Gson freshGson = new Gson();
+
+  // A JSON number with no fractional part deserializes as Long (not Double) into an untyped
+  // Object field, so a customer's integer field value (e.g. "character_limit": 30) round-trips
+  // as Long(30) instead of Double(30.0) -- preserving their original literal instead of silently
+  // turning every number into a float.
+  private final Gson numberAwareGson = new GsonBuilder()
+      .setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
+      .create();
 
   /**
    * Make sure all fields are mapped in the locale - value way.
@@ -69,7 +79,8 @@ public class EntrySerializer implements JsonSerializer<CMAEntry>, JsonDeserializ
   @Override
   public CMAEntry deserialize(JsonElement json, Type type, JsonDeserializationContext context)
       throws JsonParseException {
-    final CMAEntry entry = new Gson().fromJson(json, CMAEntry.class); // default deserialization
+    // default deserialization
+    final CMAEntry entry = numberAwareGson.fromJson(json, CMAEntry.class);
     RichTextFactory.resolveRichTextField(entry);
     return entry;
   }
