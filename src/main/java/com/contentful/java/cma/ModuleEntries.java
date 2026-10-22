@@ -27,6 +27,9 @@ import com.contentful.java.cma.model.patch.CMAEntryJsonPatchItem;
 import com.contentful.java.cma.model.patch.JsonPatchOperator;
 import retrofit2.Retrofit;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -345,6 +348,40 @@ public class ModuleEntries extends AbsModule<ServiceEntries> {
         spaceId,
         environmentId,
         entryId).blockingFirst();
+  }
+
+  /**
+   * Publish an Entry only in the given locales, leaving every other locale as it is.
+   * <p>
+   * Requires a space with locale-based publishing enabled.
+   *
+   * @param entry   Entry
+   * @param locales codes of the locales to publish
+   * @return {@link CMAEntry} result instance
+   * @throws IllegalArgumentException if entry is null.
+   * @throws IllegalArgumentException if entry's id is null.
+   * @throws IllegalArgumentException if entry's space id is null.
+   * @throws IllegalArgumentException if locales is null or empty.
+   */
+  public CMAEntry publish(CMAEntry entry, Collection<String> locales) {
+    assertNotNull(entry, "entry");
+    if (locales == null || locales.isEmpty()) {
+      throw new IllegalArgumentException("locales must not be null or empty.");
+    }
+    final String entryId = getResourceIdOrThrow(entry, "entry");
+    final String environmentId = entry.getEnvironmentId();
+    final String spaceId = getSpaceIdOrThrow(entry, "entry");
+
+    final Map<String, Object> fields = Collections.singletonMap("*", new ArrayList<>(locales));
+    final Map<String, Object> add = Collections.singletonMap("fields", fields);
+    final Map<String, Object> body = Collections.singletonMap("add", add);
+
+    return service.publishLocales(
+        entry.getSystem().getVersion(),
+        spaceId,
+        environmentId,
+        entryId,
+        body).blockingFirst();
   }
 
   /**

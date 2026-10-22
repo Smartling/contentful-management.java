@@ -522,6 +522,33 @@ class EntryTests {
     }
 
     @test
+    fun testPublishLocales() {
+        val responseBody = TestUtils.fileToString("entry_create_links_request.json")
+        server!!.enqueue(MockResponse().setResponseCode(200).setBody(responseBody))
+
+        client!!.entries().publish(CMAEntry()
+                .setId("entryid")
+                .setSpaceId("spaceid")
+                .setVersion(1), listOf("fr", "de"))
+
+        val recordedRequest = server!!.takeRequest()
+        assertEquals("PUT", recordedRequest.method)
+        assertEquals("/spaces/spaceid/environments/master/entries/entryid/published", recordedRequest.path)
+        assertNotNull(recordedRequest.getHeader("X-Contentful-Version"))
+        assertEqualJsons("""{"add":{"fields":{"*":["fr","de"]}}}""", recordedRequest.body.readUtf8(), true)
+    }
+
+    @test
+    fun testPublishLocalesRejectsEmptyLocales() {
+        assertFailsWith<IllegalArgumentException> {
+            client!!.entries().publish(CMAEntry()
+                    .setId("entryid")
+                    .setSpaceId("spaceid")
+                    .setVersion(1), emptyList())
+        }
+    }
+
+    @test
     fun testUnArchive() {
         val requestBody = TestUtils.fileToString("space_create_request.json")
         server!!.enqueue(MockResponse().setResponseCode(200).setBody(requestBody))
