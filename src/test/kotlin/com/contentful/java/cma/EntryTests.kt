@@ -324,6 +324,17 @@ class EntryTests {
     }
 
     @test
+    fun testFetchEntryParsesFieldStatus() {
+        val responseBody = """{"sys":{"type":"Entry","id":"entryid","version":2,"fieldStatus":{"*":{"en-US":"published","fr":"changed"}}},"fields":{}}"""
+        server!!.enqueue(MockResponse().setResponseCode(200).setBody(responseBody))
+
+        val result = client!!.entries().fetchOne("space", "master", "entry")
+
+        assertEquals("published", result.system.fieldStatus["*"]!!["en-US"])
+        assertEquals("changed", result.system.fieldStatus["*"]!!["fr"])
+    }
+
+    @test
     fun testFetchWithIdWithConfiguredSpaceAndEnvironment() {
         val responseBody = TestUtils.fileToString("entry_fetch_one_response.json")
         server!!.enqueue(MockResponse().setResponseCode(200).setBody(responseBody))
