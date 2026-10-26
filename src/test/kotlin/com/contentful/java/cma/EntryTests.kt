@@ -324,6 +324,17 @@ class EntryTests {
     }
 
     @test
+    fun testFetchEntryParsesFieldStatus() {
+        val responseBody = """{"sys":{"type":"Entry","id":"entryid","version":2,"fieldStatus":{"*":{"en-US":"published","fr":"changed"}}},"fields":{}}"""
+        server!!.enqueue(MockResponse().setResponseCode(200).setBody(responseBody))
+
+        val result = client!!.entries().fetchOne("space", "master", "entry")
+
+        assertEquals("published", result.system.fieldStatus["*"]!!["en-US"])
+        assertEquals("changed", result.system.fieldStatus["*"]!!["fr"])
+    }
+
+    @test
     fun testFetchWithIdWithConfiguredSpaceAndEnvironment() {
         val responseBody = TestUtils.fileToString("entry_fetch_one_response.json")
         server!!.enqueue(MockResponse().setResponseCode(200).setBody(responseBody))
@@ -519,6 +530,33 @@ class EntryTests {
         assertEquals("PUT", recordedRequest.method)
         assertEquals("/spaces/spaceid/environments/master/entries/entryid/published", recordedRequest.path)
         assertNotNull(recordedRequest.getHeader("X-Contentful-Version"))
+    }
+
+    @test
+    fun testPublishLocales() {
+        val responseBody = TestUtils.fileToString("entry_create_links_request.json")
+        server!!.enqueue(MockResponse().setResponseCode(200).setBody(responseBody))
+
+        client!!.entries().publish(CMAEntry()
+                .setId("entryid")
+                .setSpaceId("spaceid")
+                .setVersion(1), listOf("fr", "de"))
+
+        val recordedRequest = server!!.takeRequest()
+        assertEquals("PUT", recordedRequest.method)
+        assertEquals("/spaces/spaceid/environments/master/entries/entryid/published", recordedRequest.path)
+        assertNotNull(recordedRequest.getHeader("X-Contentful-Version"))
+        assertEqualJsons("""{"add":{"fields":{"*":["fr","de"]}}}""", recordedRequest.body.readUtf8(), true)
+    }
+
+    @test
+    fun testPublishLocalesRejectsEmptyLocales() {
+        assertFailsWith<IllegalArgumentException> {
+            client!!.entries().publish(CMAEntry()
+                    .setId("entryid")
+                    .setSpaceId("spaceid")
+                    .setVersion(1), emptyList())
+        }
     }
 
     @test

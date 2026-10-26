@@ -3,6 +3,7 @@ package com.contentful.java.cma.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Record of all system properties a resource can have.
@@ -37,6 +38,8 @@ public class CMASystem {
   public void setVisibility(CMAVisibility visibility) {
     this.visibility = visibility;
   }
+
+  Map<String, Map<String, String>> fieldStatus;
 
   Integer archivedVersion;
 
@@ -132,6 +135,14 @@ public class CMASystem {
    */
   public CMALink getPublishedBy() {
     return publishedBy;
+  }
+
+  /**
+   * @return the publishing status per locale, as {@code {"*": {"en-US": "published"}}}; values are
+   * draft, changed or published. Null if the response carried none.
+   */
+  public Map<String, Map<String, String>> getFieldStatus() {
+    return fieldStatus;
   }
 
   /**
@@ -276,6 +287,7 @@ public class CMASystem {
     map.put("publishedAt", getPublishedAt());
     map.put("publishedBy", getPublishedBy());
     map.put("publishedCounter", getPublishedCounter());
+    map.put("fieldStatus", getFieldStatus());
     map.put("publishedVersion", getPublishedVersion());
     map.put("space", getSpace());
     map.put("environment", getEnvironment());

@@ -113,6 +113,14 @@ interface ServiceEntries {
       @Path("environment") String environmentId,
       @Path("entry") String entryId);
 
+  @PUT("/spaces/{space}/environments/{environment}/entries/{entry}/published")
+  Flowable<CMAEntry> publishLocales(
+      @Header("X-Contentful-Version") Integer version,
+      @Path("space") String spaceId,
+      @Path("environment") String environmentId,
+      @Path("entry") String entryId,
+      @Body Map<String, Object> body);
+
   @DELETE("/spaces/{space}/environments/{environment}/entries/{entry}/published")
   Flowable<CMAEntry> unPublish(
       @Path("space") String spaceId,
